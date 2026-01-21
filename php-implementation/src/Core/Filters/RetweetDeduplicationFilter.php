@@ -4,41 +4,36 @@ declare(strict_types=1);
 
 namespace XAlgorithm\Core\Filters;
 
-use XAlgorithm\Core\DataStructures\ScoredPostsQuery;
 use XAlgorithm\Core\DataStructures\PostCandidate;
-use XAlgorithm\Core\Pipeline\Interfaces\FilterInterface;
+use XAlgorithm\Core\DataStructures\ScoredPostsQuery;
 use XAlgorithm\Core\Pipeline\Interfaces\FilterResult;
 
-/**
- * 转推去重过滤器
- */
-class RetweetDeduplicationFilter implements FilterInterface
+class RetweetDeduplicationFilter implements \XAlgorithm\Core\Pipeline\Interfaces\FilterInterface
 {
-    private string $name;
-
-    public function __construct()
-    {
-        $this->name = 'RetweetDeduplicationFilter';
-    }
-
     public function getName(): string
     {
-        return $this->name;
+        return 'RetweetDeduplicationFilter';
     }
 
     public function filter(ScoredPostsQuery $query, array $candidates): FilterResult
     {
+        $seenTweetIds = [];
         $kept = [];
         $removed = [];
-        $seenOriginalTweetIds = [];
 
         foreach ($candidates as $candidate) {
-            $originalTweetId = $candidate->retweetedTweetId ?? $candidate->tweetId;
+            $retweetedId = $candidate->retweetedTweetId;
 
-            if (isset($seenOriginalTweetIds[$originalTweetId])) {
-                $removed[] = $candidate;
+            if ($retweetedId !== null) {
+                $id = (int) $retweetedId;
+                if (!in_array($id, $seenTweetIds)) {
+                    $seenTweetIds[] = $id;
+                    $kept[] = $candidate;
+                } else {
+                    $removed[] = $candidate;
+                }
             } else {
-                $seenOriginalTweetIds[$originalTweetId] = true;
+                $seenTweetIds[] = (int) $candidate->tweetId;
                 $kept[] = $candidate;
             }
         }

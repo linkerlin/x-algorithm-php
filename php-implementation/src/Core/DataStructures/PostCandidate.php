@@ -32,6 +32,13 @@ class PostCandidate
     public ?string $retweetedScreenName = null;
     public ?FilteredReason $visibilityReason = null;
     public ?int $subscriptionAuthorId = null;
+    public ?string $vfStatus = null;
+    public ?bool $isVfSafe = null;
+    public ?bool $isSubscribed = null;
+    public array $mediaEntities = [];
+    public ?float $diversityScore = null;
+    public ?float $oonScore = null;
+    public ?float $finalScore = null;
 
     public function __construct(array $data = [])
     {
@@ -56,6 +63,13 @@ class PostCandidate
         $this->authorScreenName = $data['author_screen_name'] ?? null;
         $this->retweetedScreenName = $data['retweeted_screen_name'] ?? null;
         $this->subscriptionAuthorId = $data['subscription_author_id'] ?? null;
+        $this->vfStatus = $data['vf_status'] ?? null;
+        $this->isVfSafe = $data['is_vf_safe'] ?? null;
+        $this->isSubscribed = $data['is_subscribed'] ?? null;
+        $this->mediaEntities = $data['media_entities'] ?? [];
+        $this->diversityScore = $data['diversity_score'] ?? null;
+        $this->oonScore = $data['oon_score'] ?? null;
+        $this->finalScore = $data['final_score'] ?? null;
     }
 
     public function toArray(): array
@@ -80,6 +94,13 @@ class PostCandidate
             'author_screen_name' => $this->authorScreenName,
             'retweeted_screen_name' => $this->retweetedScreenName,
             'subscription_author_id' => $this->subscriptionAuthorId,
+            'vf_status' => $this->vfStatus,
+            'is_vf_safe' => $this->isVfSafe,
+            'is_subscribed' => $this->isSubscribed,
+            'media_entities' => $this->mediaEntities,
+            'diversity_score' => $this->diversityScore,
+            'oon_score' => $this->oonScore,
+            'final_score' => $this->finalScore,
         ];
     }
 

@@ -335,14 +335,14 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$recentCandidate, $oldCandidate]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only recent tweet');
-        $this->assertCount(1, $result->removed, 'Should remove only old tweet');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only recent tweet');
+        $this->assertCount(1, (array)$result->removed, 'Should remove only old tweet');
 
         $allRecent = $filter->filter($query, [$recentCandidate, $recentCandidate]);
-        $this->assertCount(2, $allRecent->kept, 'Should keep all recent tweets');
+        $this->assertCount(2, (array)$allRecent->kept, 'Should keep all recent tweets');
 
         $allOld = $filter->filter($query, [$oldCandidate, $oldCandidate]);
-        $this->assertCount(0, $allOld->kept, 'Should remove all old tweets');
+        $this->assertCount(0, (array)$allOld->kept, 'Should remove all old tweets');
 
         echo "  ✓ AgeFilter tests passed\n\n";
     }
@@ -367,8 +367,8 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$c1, $c2, $c3]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only non-blocked author');
-        $this->assertCount(2, $result->removed, 'Should remove blocked authors');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only non-blocked author');
+        $this->assertCount(2, (array)$result->removed, 'Should remove blocked authors');
         $this->assertEquals(1, $result->kept[0]->tweetId, 'Should keep correct candidate');
 
         echo "  ✓ AuthorSocialgraphFilter tests passed\n\n";
@@ -388,12 +388,12 @@ class ComprehensiveTest
         $query = new ScoredPostsQuery(['user_id' => 123]);
         $result = $filter->filter($query, [$c1, $c2, $c3]);
 
-        $this->assertCount(2, $result->kept, 'Should keep unique conversations');
-        $this->assertCount(1, $result->removed, 'Should remove duplicate conversation');
+        $this->assertCount(2, (array)(array)$result->kept, 'Should keep unique conversations');
+        $this->assertCount(1, (array)(array)$result->removed, 'Should remove duplicate conversation');
 
         $noReplies = new PostCandidate(['tweet_id' => 4, 'in_reply_to_tweet_id' => 400]);
         $result2 = $filter->filter($query, [$c1, $noReplies]);
-        $this->assertCount(2, $result2->kept, 'Should keep tweets without conversations');
+        $this->assertCount(2, (array)$result2->kept, 'Should keep tweets without conversations');
 
         echo "  ✓ DedupConversationFilter tests passed\n\n";
     }
@@ -414,8 +414,8 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$c1, $c2, $c3, $c4]);
 
-        $this->assertCount(2, $result->kept, 'Should keep 2 unique candidates');
-        $this->assertCount(2, $result->removed, 'Should remove 2 duplicates');
+        $this->assertCount(2, (array)$result->kept, 'Should keep 2 unique candidates');
+        $this->assertCount(2, (array)$result->removed, 'Should remove 2 duplicates');
 
         echo "  ✓ DropDuplicatesFilter tests passed\n\n";
     }
@@ -456,7 +456,7 @@ class ComprehensiveTest
         $oldBad = new PostCandidate(['tweet_id' => $oldTweetId, 'tweet_text' => 'This is spam']);
 
         $result = $manager->filter($query, [$recentGood, $oldBad]);
-        $this->assertCount(1, $result->kept, 'Should keep only valid candidate');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only valid candidate');
 
         echo "  ✓ FilterManager tests passed\n\n";
     }
@@ -475,7 +475,7 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$eligible, $ineligible]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only eligible');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only eligible');
         $this->assertEquals(1, $result->kept[0]->tweetId, 'Should keep correct candidate');
 
         echo "  ✓ IneligibleSubscriptionFilter tests passed\n\n";
@@ -501,12 +501,12 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$good, $bad, $alsoBad]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only good content');
-        $this->assertCount(2, $result->removed, 'Should remove muted content');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only good content');
+        $this->assertCount(2, (array)$result->removed, 'Should remove muted content');
 
         $caseSensitive = new PostCandidate(['tweet_id' => 4, 'tweet_text' => 'This has SPAM in it']);
         $result2 = $filter->filter($query, [$caseSensitive]);
-        $this->assertCount(0, $result2->kept, 'Should detect muted keyword (case insensitive)');
+        $this->assertCount(0, (array)$result2->kept, 'Should detect muted keyword (case insensitive)');
 
         $cleanContent = new PostCandidate(['tweet_id' => 5, 'tweet_text' => 'Good clean content here']);
         $result3 = $filter->filter($query, [$cleanContent]);
@@ -534,8 +534,8 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$seen1, $new1, $seen2, $new2]);
 
-        $this->assertCount(2, $result->kept, 'Should keep new tweets');
-        $this->assertCount(2, $result->removed, 'Should remove seen tweets');
+        $this->assertCount(2, (array)$result->kept, 'Should keep new tweets');
+        $this->assertCount(2, (array)$result->removed, 'Should remove seen tweets');
 
         echo "  ✓ PreviouslySeenPostsFilter tests passed\n\n";
     }
@@ -558,8 +558,8 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$served1, $new1, $served2]);
 
-        $this->assertCount(1, $result->kept, 'Should keep unserved tweets');
-        $this->assertCount(2, $result->removed, 'Should remove served tweets');
+        $this->assertCount(1, (array)$result->kept, 'Should keep unserved tweets');
+        $this->assertCount(2, (array)$result->removed, 'Should remove served tweets');
 
         echo "  ✓ PreviouslyServedPostsFilter tests passed\n\n";
     }
@@ -578,8 +578,8 @@ class ComprehensiveTest
         $query = new ScoredPostsQuery(['user_id' => 123]);
         $result = $filter->filter($query, [$original, $retweet1, $retweet2]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only original');
-        $this->assertCount(2, $result->removed, 'Should remove retweets');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only original');
+        $this->assertCount(2, (array)$result->removed, 'Should remove retweets');
 
         echo "  ✓ RetweetDeduplicationFilter tests passed\n\n";
     }
@@ -598,8 +598,8 @@ class ComprehensiveTest
 
         $result = $filter->filter($query, [$selfTweet, $otherTweet]);
 
-        $this->assertCount(1, $result->kept, 'Should keep only other tweets');
-        $this->assertCount(1, $result->removed, 'Should remove self tweets');
+        $this->assertCount(1, (array)$result->kept, 'Should keep only other tweets');
+        $this->assertCount(1, (array)$result->removed, 'Should remove self tweets');
 
         echo "  ✓ SelfTweetFilter tests passed\n\n";
     }
