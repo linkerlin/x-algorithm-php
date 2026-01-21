@@ -1,0 +1,62 @@
+{
+    "name": "x-algorithm-php/x-algorithm",
+    "description": "PHP implementation of X (Twitter) For You Feed Recommendation Algorithm",
+    "type": "library",
+    "license": "Apache-2.0",
+    "keywords": [
+        "recommendation",
+        "feed",
+        "algorithm",
+        "twitter",
+        "x",
+        "phoenix",
+        "home-mixer"
+    ],
+    "homepage": "https://github.com/x-algorithm-php/x-algorithm-php",
+    "readme": "README.md",
+    "time": "2024-01-20",
+    "support": {
+        "issues": "https://github.com/x-algorithm-php/x-algorithm-php/issues",
+        "source": "https://github.com/x-algorithm-php/x-algorithm-php"
+    },
+    "authors": [
+        {
+            "name": "X Algorithm PHP Contributors",
+            "homepage": "https://github.com/x-algorithm-php/x-algorithm-php/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.0",
+        "squizlabs/php_codesniffer": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "XAlgorithm\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "XAlgorithm\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyze": "phpstan analyze src --level=5",
+        "lint": "phpcs --standard=PSR12 src/",
+        "lint-fix": "phpcbf --standard=PSR12 src/"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/x-algorithm-php"
+        }
+    ]
+}
